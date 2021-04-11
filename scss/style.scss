@@ -28,6 +28,7 @@ html {
   background-color: #278adf;
   border: none;
   border-radius: 8px;
+  cursor: pointer;
 }
 
 .breakout-wizard {
@@ -43,4 +44,20 @@ html {
   height: 600px;
   max-height: 100vh;
   z-index: 10;
+  border: 1px solid white;
+  border-radius: 8px;
+
+  &:before {
+    content: '';
+    display: block;
+    background-color: black;
+    opacity: .8;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: -1;
+  }
 }

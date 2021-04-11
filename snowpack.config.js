@@ -10,6 +10,9 @@ module.exports = {
   'devOptions': {
     'port': 8080,
   },
+  "routes": [
+    { "match": "routes", "src": ".*", "dest": "/index.html" },
+  ],
   'plugins': [
     [
       '@snowpack/plugin-sass',
