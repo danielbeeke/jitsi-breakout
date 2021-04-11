@@ -10,13 +10,10 @@ export class Connection extends EventTarget {
   private participants: Map<string, any> = new Map()
   private channels: Map<string, RTCDataChannel> = new Map()
   private webRTCConfiguration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
-  private jitsiOptions = {
-    roomName: pathSplit[2],
-    parentNode: null,
-  }
   private roomName = pathSplit[2]
   private guid: string
   private app
+  private element: HTMLDivElement
 
   constructor (app) {
     super()
@@ -25,18 +22,23 @@ export class Connection extends EventTarget {
   }
 
   async init () {
-    this.jitsiOptions.parentNode = document.querySelector('.meet')
+    this.element = document.querySelector('.meet')
     await import(`https://thingproxy.freeboard.io/fetch/https://${domain}/external_api.js`)
     this.guid = uuidv4()
-    this.api = new JitsiMeetExternalAPI(domain, this.jitsiOptions);
+    this.api = new JitsiMeetExternalAPI(domain, {
+      parentNode: this.element,
+      roomName: this.roomName
+    });
     this.attachApiHandling()
 
     this.addEventListener('command', (event: CustomEvent) => {
       const message = event.detail
       if (message.command && message.command === 'change-room') {
         this.api.dispose()
-        const currentJitsiOptions = Object.assign({}, this.jitsiOptions, { roomName: message.roomName })
-        this.api = new JitsiMeetExternalAPI(domain, currentJitsiOptions);
+        this.api = new JitsiMeetExternalAPI(domain, {
+          parentNode: this.element,
+          roomName: message.roomName
+        });
         this.attachApiHandling()    
       }
     })
@@ -157,8 +159,6 @@ export class Connection extends EventTarget {
   }
 
   processCommand (parsedMessage) {
-    this.dispatchEvent(new CustomEvent('command', {
-      detail: parsedMessage
-    }))
+    this.dispatchEvent(new CustomEvent('command', { detail: parsedMessage }))
   }
 }

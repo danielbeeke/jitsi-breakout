@@ -18,7 +18,8 @@ class App {
     this.connection.addEventListener('command', (event: CustomEvent) => {
       const message = event.detail
       if (message.command && message.command === 'change-room') {
-        this.isInBreakout = message.isBreakout
+        this.isInBreakout = message.isInBreakout
+        this.draw()
       }
     })
   }
@@ -104,11 +105,10 @@ class App {
   }
 
   executeBreakout (assignment) {
-    this.isInBreakout = true
     for (const [id, room] of Object.entries(assignment.participant)) {
       this.connection.sendById(id, {
         command: 'change-room',
-        isBreakout: true,
+        isInBreakout: true,
         roomName: `${this.connection.roomName}-${room}`
       })
     }
@@ -121,7 +121,7 @@ class App {
   return () {
     this.connection.broadcast({
       command: 'change-room',
-      isBreakout: false,
+      isInBreakout: false,
       roomName: this.connection.roomName
     })
   }
