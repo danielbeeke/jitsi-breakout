@@ -5,6 +5,7 @@
   "main": "snowpack.config.js",
   "scripts": {
     "start": "snowpack dev",
+    "build": "snowpack build && echo 'jitsi-breakout.danielbeeke.nl' > docs/CNAME",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

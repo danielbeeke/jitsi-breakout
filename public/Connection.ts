@@ -24,18 +24,20 @@ export class Connection extends EventTarget {
 
   async init () {
     this.element = document.querySelector('.meet')
-    try {
-      await import(`https://thingproxy.freeboard.io/fetch/https://${domain}/external_api.js`)
-    }
-    catch(exception) {
 
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = `//thingproxy.freeboard.io/fetch/https://${domain}/external_api.js`
+    script.onload = () => {
+      this.guid = uuidv4()
+      this.api = new JitsiMeetExternalAPI(domain, {
+        parentNode: this.element,
+        roomName: this.roomName
+      });
+      this.attachApiHandling()  
     }
-    this.guid = uuidv4()
-    this.api = new JitsiMeetExternalAPI(domain, {
-      parentNode: this.element,
-      roomName: this.roomName
-    });
-    this.attachApiHandling()
+    
+    document.getElementsByTagName('head')[0].appendChild(script);
 
     this.addEventListener('command', (event: CustomEvent) => {
       const message = event.detail
