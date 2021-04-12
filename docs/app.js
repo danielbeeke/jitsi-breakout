@@ -31,7 +31,7 @@ var Connection = class extends EventTarget {
     this.element = document.querySelector(".meet");
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src = `//thingproxy.freeboard.io/fetch/https://${domain}/external_api.js`;
+    script.src = `//${domain}/external_api.js`;
     script.onload = () => {
       this.guid = uuidv4();
       this.api = new JitsiMeetExternalAPI(domain, {
