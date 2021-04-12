@@ -8,10 +8,13 @@ module.exports = {
     'scss': '/css',
   },
   'devOptions': {
-    'port': 8080,
+    'port': 8080
+  },
+  'buildOptions': {
+    'out': 'docs'
   },
   "routes": [
-    { "match": "routes", "src": ".*", "dest": "/index.html" },
+    { "match": "routes", "src": ".*", "dest": "/404.html" },
   ],
   'plugins': [
     [

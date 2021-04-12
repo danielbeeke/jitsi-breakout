@@ -7,6 +7,8 @@ class App {
   private numberOfRooms = 1
   private isInBreakout = false
   private connection
+  private domain = 'meet.jit.si'
+  private roomName = ''
 
   constructor () {
     this.init()
@@ -15,6 +17,8 @@ class App {
   async init () {
     this.draw()
     this.connection = new Connection(this)
+    this.draw()
+
     this.connection.addEventListener('command', (event: CustomEvent) => {
       const message = event.detail
       if (message.command && message.command === 'change-room') {
@@ -30,15 +34,25 @@ class App {
       this.draw()
     }
 
+    const redirect = () => {
+      window.location.href = `/${this.domain}/${this.roomName}`
+    }
+
     render(document.querySelector('#app'), html`
-      <div class="meet"></div>
+      ${!this.connection?.domain ? html`
+      <label>Jitsi domain:</label><input onchange=${event => this.domain = event.target.value} .value=${this.domain}><br>
+      <label>Room name:</label><input onchange=${event => this.roomName = event.target.value} .value=${this.roomName}>
+      <button onclick=${redirect}>Go</button>
+      ` : html`
       ${this.isInBreakout ? html`
       <button onclick=${() => this.return()} class="breakout-button"><img src="/close.svg" /></button>
       ` : html`
       <button onclick=${openBreakoutMenu} class="breakout-button"><img src="/icon.svg" /></button>
-      `}
-      
-      ${this.wizardIsOpen ? this.wizardTemplate() : html``}
+    `}
+    
+    ${this.wizardIsOpen ? this.wizardTemplate() : html``}
+    `}
+    <div class="meet"></div>
     `)
   }
 

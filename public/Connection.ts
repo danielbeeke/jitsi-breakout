@@ -11,6 +11,7 @@ export class Connection extends EventTarget {
   private channels: Map<string, RTCDataChannel> = new Map()
   private webRTCConfiguration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
   private roomName = pathSplit[2]
+  private domain = pathSplit[1]
   private guid: string
   private app
   private element: HTMLDivElement
@@ -18,12 +19,17 @@ export class Connection extends EventTarget {
   constructor (app) {
     super()
     this.app = app
-    this.init()
+    if (this.domain) this.init()
   }
 
   async init () {
     this.element = document.querySelector('.meet')
-    await import(`https://thingproxy.freeboard.io/fetch/https://${domain}/external_api.js`)
+    try {
+      await import(`https://thingproxy.freeboard.io/fetch/https://${domain}/external_api.js`)
+    }
+    catch(exception) {
+
+    }
     this.guid = uuidv4()
     this.api = new JitsiMeetExternalAPI(domain, {
       parentNode: this.element,
